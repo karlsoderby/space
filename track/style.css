@@ -1,0 +1,135 @@
+html {
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+  padding: 0; margin: 0;
+  overflow: hidden;
+}
+
+.body2 {
+  background-color: white;
+}
+
+body {
+  padding: 1rem;
+  background-color: #f3efb1;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.pointer {
+  background-color: #69d3c4;
+  position: absolute;
+  width: 15vw;
+  height: 15vw;
+  border-radius: 50%;
+  opacity: 1.0; 
+}
+
+.down {
+  background-color:  #4c9d92;
+}
+
+
+
+/* NEW CODE */
+
+.boxLeft {
+  width: 300px;
+  height: 300px;
+  font-size: 40px;
+  float: left;
+  transition: all 0.2s;
+  border: solid black 5px;
+}
+
+.boxRight {
+  width: 100px;
+  height: 500px;
+  font-size: 20px;
+  float: right;
+  transition: all 0.2s;
+  border: solid green 5px;
+}
+
+.boxBottom {
+  margin: 0px auto;
+  margin-top: 300px;
+  width: 150px;
+  height: 150px;
+  font-size: 20px;
+  float: center;
+  transition: all 0.2s;
+  border-top-left-radius: 25px;
+  padding: 10px;
+  background: white;
+  font-size: 30px;
+
+  
+}
+
+.topLeft {
+  margin: 0px;
+  width: 40px;
+  height: 40px;
+  border-bottom-right-radius: 25px;
+  background-color: transparent;
+  transition: all 0.2s;
+}
+
+.topLeftFull {
+  width: 350px;
+  height: 600px;
+  transition: all 0.2s;
+  font-size: 30px;
+  padding: 20px;
+  background-color: #f3efb1;
+}
+
+.topRight {
+  float: right;
+  margin: 0px;
+  width: 40px;
+  height: 40px;
+  border-bottom-left-radius: 25px;
+  background-color: transparent;
+  transition: all 0.2s;
+}
+
+.topRightFull {
+  width: 300px;
+  height: 600px;
+  transition: all 0.2s;
+  font-size: 30px;
+  padding: 20px;
+  background-color: #f3efb1;
+  float: right;
+}
+
+.mainStyle {
+  margin: 0px auto;
+  border-radius: 0%;
+  width: 100px;
+  height: 50px;
+  
+  border-top: white solid 5px;
+  margin-top: -20px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.mainStyle2 {
+  margin: 0px auto;
+  border-radius: 0;
+  width: 50px;
+  height: 100px;
+  float: right;
+  border-right: white solid 5px;
+  margin-top: 200px;
+  text-align: right;
+  font-size: 10px;
+}
