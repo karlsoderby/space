@@ -1,0 +1,43 @@
+html {
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+  padding: 0; margin: 0;
+  overflow: hidden;
+}
+
+body {
+  padding: 1rem;
+  background-color: #f3efb1;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 20px;
+  touch-action: none;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.pointer {
+  background-color: red;
+  position: absolute;
+  width: 15vw;
+  height: 15vw;
+  border-radius: 50%;
+  opacity: 1.0; 
+}
+
+.down {
+  background-color:  #4c9d92;
+}
+
+#pulldown {
+  position: absolute;
+  background-color: red;
+  padding-left: 100px;
+  padding-right: 100px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  margin: 0 auto;
+}
