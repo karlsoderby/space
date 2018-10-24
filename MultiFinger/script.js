@@ -2,8 +2,15 @@ let pulldown;
 let pulldownText;
 let touchData = {movingUp: false, movingLeft: false, numGroups: 0, horizontalSpeed: 0, verticalSpeed: 0, absSpeed: 0, numPointers: 0, distance: 0, isApproaching: false};
 let newPos = 0;
+let pages = [];
+let pageHeight = 1000;
+let currentScroll = 0;
+let currentPage = 0;
+let oldThreeFinger = 0;
+
 function onDocumentReady() {
     let el = document.body;
+    //document.body.style.height = "5000px";
     pulldown = document.getElementById("pulldown");
     pulldownText = document.getElementById("pulldownText");
     pulldown.style.top = -100 + "px";
@@ -22,11 +29,34 @@ function onDocumentReady() {
     el.addEventListener('gesturestart', e => e.preventDefault());
     el.addEventListener('gesturechange', e => e.preventDefault());
     el.addEventListener('gestureend', e => e.preventDefault());
+
+    for(let i = 0; i < 8; i++) {
+      pages.push(new page(i * pageHeight));
+      //document.body.style.height = i * 50 + "px";
+    }
   
     setInterval(() => {
       displayData();
     }, 16)
   }
+
+  function page(i) {
+    this.yPos = i;
+    let pageDiv = document.createElement("div");
+    pageDiv.style.backgroundColor = "white";
+    pageDiv.style.position = "absolute";
+    pageDiv.style.top = this.yPos + "px";
+    pageDiv.style.height = pageHeight - 50 + "px";
+    pageDiv.style.width = "80%";
+    pageDiv.style.margin = "5%"
+    pageDiv.style.left = "10%"
+    pageDiv.innerHTML = Math.random().toString(36).substring(7);
+    document.body.appendChild(pageDiv);
+  }
+
+  function map_range(value, low1, high1, low2, high2) {
+    return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+}
   
   function displayData () {
     let g = pointers.createPointerGroupings();
@@ -40,12 +70,31 @@ function onDocumentReady() {
       pulldown.innerHTML = pointers.numOfPointers;
       //console.log(touchData.verticalSpeed);
       pulldownText.innerHTML = touchData.numPointers;
-      if(touchData.numPointers > 1) {
-        
+      if(touchData.numPointers === 1) {
+        window.scrollTo(0, currentScroll += (pg.verticalSpeed / 8));
+        console.log(currentScroll)
       }
-      console.log(newPos)
+      if(touchData.numPointers === 2) {
+        currentScroll += (pg.verticalSpeed / 10)
+        /* if(pg.isMovingUp) {
+          currentPage --;
+        }
+        else {
+          currentPage ++;
+        }
+        currentPage = map_range(currentPage, 0, )
+        console.log(currentPage) */
+        
+        currentPage = Math.abs(map_range(currentScroll, 0, window.innerHeight, 0, pages.length - 1)); 
+        console.log(parseInt(currentPage))  
+        //console.log(pages[parseInt(currentPage)].yPos)
+        window.scrollTo(0, pages[parseInt(currentPage)].yPos);
+        //window.scrollTo(0, pages[parseInt(currentPage)].scrollIntoView());
+       // window.scrollTo(0, pages[parseInt(currentPage)].scrollIntoView());
+      }
+     // console.log(newPos)
       newPos += (touchData.verticalSpeed / 10);
-      pulldown.style.top = newPos + "px";
+      //pulldown.style.top = newPos + "px";
       //document.body.style.backgroundColor = "rgb("+ touchData.numPointers * 100 + ",255, 255)";
       //console.log(pg.numOfPointers)
       /* text ="Moving up: " + pg.isMovingUp + "<br/>" +
