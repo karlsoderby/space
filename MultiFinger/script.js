@@ -1,12 +1,14 @@
 let pulldown;
 let pulldownText;
-let touchData = {movingUp: false, movingLeft: false, numGroups: 0, horizontalSpeed: 0, verticalSpeed: 0, absSpeed: 0, numPointers: 0, distance: 0, isApproaching: false};
+//let pg = {movingUp: false, movingLeft: false, numGroups: 0, horizontalSpeed: 0, verticalSpeed: 0, absSpeed: 0, numPointers: 0, distance: 0, isApproaching: false};
 let newPos = 0;
 let pages = [];
 let pageHeight = 1000;
 let currentScroll = 0;
 let currentPage = 0;
 let oldThreeFinger = 0;
+let oldScroll = 0;
+let newScroll = 0;
 
 function onDocumentReady() {
     let el = document.body;
@@ -54,11 +56,21 @@ function onDocumentReady() {
     document.body.appendChild(pageDiv);
   }
 
+    //Interpolation
+function lerp(v0, v1, t) {
+  return v0*(1-t)+v1*t;
+}
+
   function map_range(value, low1, high1, low2, high2) {
     return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
+
+Math.clamp = function(number, min, max) {
+  return Math.max(min, Math.min(number, max));
+}
   
   function displayData () {
+    oldScroll = currentScroll;
     let g = pointers.createPointerGroupings();
     let text = "";
     if (pointers.numOfPointers > 1) 
@@ -66,34 +78,41 @@ function onDocumentReady() {
     
     if (g.numOfGroupings > 0) {
       let pg = g.groupings[0];
-      touchData = {movingUp: pg.isMovingUp, movingLeft: pg.isMovingLeft, numGroups: g.numOfGroupings, horizontalSpeed: pg.horizontalSpeed, verticalSpeed: pg.verticalSpeed, absSpeed: pg.speed, numPointers: pointers.numOfPointers, distance: distance, isApproaching: isApproaching};
+      //pg = {movingUp: pg.isMovingUp, movingLeft: pg.isMovingLeft, numGroups: g.numOfGroupings, horizontalSpeed: pg.horizontalSpeed, verticalSpeed: pg.verticalSpeed, absSpeed: pg.speed, numPointers: pointers.numOfPointers, distance: distance, isApproaching: isApproaching};
       pulldown.innerHTML = pointers.numOfPointers;
       //console.log(touchData.verticalSpeed);
-      pulldownText.innerHTML = touchData.numPointers;
-      if(touchData.numPointers === 1) {
-        window.scrollTo(0, currentScroll += (pg.verticalSpeed / 8));
-        console.log(currentScroll)
-      }
-      if(touchData.numPointers === 2) {
-        currentScroll += (pg.verticalSpeed / 10)
-        /* if(pg.isMovingUp) {
-          currentPage --;
+      pulldownText.innerHTML = pg.numPointers;
+      if(pointers.numOfPointers === 1) {
+        if(window.scrollY < document.body.height || window.scrollY > 0) {
+          
         }
-        else {
-          currentPage ++;
-        }
-        currentPage = map_range(currentPage, 0, )
-        console.log(currentPage) */
         
-        currentPage = Math.abs(map_range(currentScroll, 0, window.innerHeight, 0, pages.length - 1)); 
-        console.log(parseInt(currentPage))  
-        //console.log(pages[parseInt(currentPage)].yPos)
-        window.scrollTo(0, pages[parseInt(currentPage)].yPos);
-        //window.scrollTo(0, pages[parseInt(currentPage)].scrollIntoView());
-       // window.scrollTo(0, pages[parseInt(currentPage)].scrollIntoView());
+        currentScroll += (pg.verticalSpeed / 32)
+        //window.scrollTo(0, );
       }
-     // console.log(newPos)
-      newPos += (touchData.verticalSpeed / 10);
+      if(pointers.numOfPointers  === 2) {
+        
+       /*  currentScroll += (pg.verticalSpeed)
+        currentPage = Math.abs(map_range(currentScroll, 0, window.innerHeight, 0, 7)); 
+        currentScroll = Math.clamp(currentScroll, 0, document.body.style.height);
+        if(currentPage >= 0 && currentPage < pages.length) { 
+
+        } */
+
+        if(pg.isMovingUp) currentPage += 0.05;
+        else currentPage -= 0.05;
+        currentPage = Math.clamp(currentPage, 0, 7);
+        //console.log(parseInt(currentPage))  ;
+        currentScroll = pages[parseInt(currentPage)].yPos;
+      }
+
+     /*  if(pg.numPointers === 3) {
+        if(pg.isMovingUp) currentScroll = 0;
+        else currentScroll = parseFloat(document.body.style.height);
+      } */
+      
+      
+      //oldScroll = 
       //pulldown.style.top = newPos + "px";
       //document.body.style.backgroundColor = "rgb("+ touchData.numPointers * 100 + ",255, 255)";
       //console.log(pg.numOfPointers)
@@ -108,7 +127,19 @@ function onDocumentReady() {
             "Pointer 1 & 2 approaching: " + isApproaching;
             document.getElementById("data").innerHTML = text; */
     } 
+
+    //newScroll = 
+    //let newScroll = lerp()
     
+    newScroll = lerp(newScroll, currentScroll, 0.1);
+    console.log(currentScroll)
+    window.scrollTo(0, newScroll)
+    //sconsole.log(newScroll);
+      /* console.log(currentScroll);
+      if(currentScroll != oldScroll) {
+        window.scrollTo({ top: currentScroll, behavior: 'smooth' });
+      } */
+      
   }
 
   function onPointerUp(e) {
