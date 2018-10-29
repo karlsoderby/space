@@ -52,7 +52,9 @@ function onDocumentReady() {
     pageDiv.style.width = "80%";
     pageDiv.style.margin = "5%"
     pageDiv.style.left = "10%"
-    pageDiv.innerHTML = Math.random().toString(36).substring(7);
+    for(let i = 0; i < 500; i++) {
+      pageDiv.innerHTML += Math.random().toString(36).substring(7);
+    }
     document.body.appendChild(pageDiv);
   }
 
