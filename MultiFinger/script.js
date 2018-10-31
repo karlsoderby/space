@@ -1,21 +1,18 @@
-let pulldown;
-let pulldownText;
+
 //let pg = {movingUp: false, movingLeft: false, numGroups: 0, horizontalSpeed: 0, verticalSpeed: 0, absSpeed: 0, numPointers: 0, distance: 0, isApproaching: false};
 let newPos = 0;
 let pages = [];
-let pageHeight = 500;
+let pageSize = 300;
 let currentScroll = 0;
 let currentPage = 0;
 let oldScroll = 0;
 let newScroll = 0;
 let destination = 0;
+let animating = false;
 
 function onDocumentReady() {
     let el = document.body;
-    //document.body.style.height = "5000px";
-    pulldown = document.getElementById("pulldown");
-    pulldownText = document.getElementById("pulldownText");
-    pulldown.style.top = -100 + "px";
+
     el.addEventListener('pointerup', onPointerUp);
     el.addEventListener('pointerdown', onPointerDown);
     el.addEventListener('pointermove', onPointerMove);
@@ -32,14 +29,14 @@ function onDocumentReady() {
     el.addEventListener('gesturechange', e => e.preventDefault());
     el.addEventListener('gestureend', e => e.preventDefault());
 
-    for(let i = 0; i < 8; i++) {
-      pages.push(new page(i * pageHeight));
+    for(let i = 0; i < 16; i++) {
+      pages.push(new page(i * pageSize));
       //document.body.style.height = i * 50 + "px";
     }
   
     setInterval(() => {
       displayData();
-      destination = 0;
+      
     }, 16)
   }
 
@@ -49,8 +46,8 @@ function onDocumentReady() {
     this.pageDiv.style.backgroundColor = "white";
     this.pageDiv.style.position = "absolute";
     this.pageDiv.style.left = this.yPos + "px";
-    this.pageDiv.style.height = pageHeight - 50 + "px";
-    this.pageDiv.style.width = "80%";
+    this.pageDiv.style.height = pageSize - 50 + "px";
+    this.pageDiv.style.width = pageSize - 50 + "px";
     this.pageDiv.style.margin = "5%"
     //this.pageDiv.style.left = "10%"
     this.pageDiv.style.backgroundColor = random_rgba();
@@ -88,16 +85,15 @@ function random_rgba() {
     if (g.numOfGroupings > 0) {
       let pg = g.groupings[0];
       //pg = {movingUp: pg.isMovingUp, movingLeft: pg.isMovingLeft, numGroups: g.numOfGroupings, horizontalSpeed: pg.horizontalSpeed, verticalSpeed: pg.verticalSpeed, absSpeed: pg.speed, numPointers: pointers.numOfPointers, distance: distance, isApproaching: isApproaching};
-      pulldown.innerHTML = pointers.numOfPointers;
-      //console.log(touchData.verticalSpeed);
-      pulldownText.innerHTML = pg.numPointers;
       if(pointers.numOfPointers === 1) {
-        if(window.scrollY < document.body.height || window.scrollY > 0) {
-          
+        if(pg.horizontalSpeed > 10 && !animating) {
+          destination = 50;
+          playAnimation(destination, 16);
         }
-        
-        currentScroll += (pg.verticalSpeed / 32)
-        //window.scrollTo(0, );
+        else if( pg.horizontalSpeed < - 10 && !animating) {
+          destination = - 50;
+          playAnimation(destination, 16);
+        }
       }
       if(pointers.numOfPointers  === 2) { 
         
@@ -107,86 +103,44 @@ function random_rgba() {
         if(currentPage >= 0 && currentPage < pages.length) { 
 
         } */
-
-        if(pg.isMovingUp && pg.verticalSpeed > 100) {
-          destination = 500;
-
-            //playAnimation(500);
-            
-          
+        //console.log(pg.horizontalSpeed)
+        if(pg.horizontalSpeed > 50 && !animating) {
+          destination = pageSize;
+          playAnimation(destination, 300);
         }
-        else if(!pg.isMovingUp && pg.verticalSpeed < - 100) {
-
-            
-           // playAnimation(-500);
-          
-          destination = -500;
+        else if( pg.horizontalSpeed < - 50 && !animating) {
+          destination = -pageSize;
+          playAnimation(destination, 300);
         }
-        //console.log(destination)
-        //console.log(destination)
-      // console.log(pg.verticalSpeed)
-        /* if(pg.isMovingUp) currentPage += 0.05;
-        else currentPage -= 0.05;
-        currentPage = Math.clamp(currentPage, 0, 7);
-        //console.log(parseInt(currentPage))  ;
-        currentScroll = pages[parseInt(currentPage)].yPos;
-        console.log(pg.verticalSpeed) */
-        /* if(pg.isMovingUp) */
       }
-      
-
-     /*  if(pg.numPointers === 3) {
-        if(pg.isMovingUp) currentScroll = 0;
-        else currentScroll = parseFloat(document.body.style.height);
-      } */
-      
-      
-      //oldScroll = 
-      //pulldown.style.top = newPos + "px";
-      //document.body.style.backgroundColor = "rgb("+ touchData.numPointers * 100 + ",255, 255)";
-      //console.log(pg.numOfPointers)
-      /* text ="Moving up: " + pg.isMovingUp + "<br/>" +
-            "Moving left: " + pg.isMovingLeft + "<br/>" +  
-            "Number of groupings: " + g.numOfGroupings + "<br/>" +
-            "Horizontal speed: " + Math.round(pg.horizontalSpeed)+"<br/>"   +
-            "Vertical speed: " + Math.round(pg.verticalSpeed)+"<br/>"  +
-            "Absolut speed: " + Math.round(pg.speed)+"<br/>" +
-            "Num of pointers: " + pointers.numOfPointers + "<br/>"+
-            "Distance between 1. & 2. pointers: " + distance + "<br/>" +
-            "Pointer 1 & 2 approaching: " + isApproaching;
-            document.getElementById("data").innerHTML = text; */
     } 
-    
-    /* newScroll = lerp(newScroll, currentScroll, 0.1);
-    window.scrollTo(0, newScroll) */
     /* for(page of pages) {
-      if(Math.abs(parseFloat(page.pageDiv.style.top) - (parseFloat(page.pageDiv.style.top) + destination)) > 50) {
-        page.pageDiv.style.top = lerp(parseFloat(page.pageDiv.style.top), parseFloat(page.pageDiv.style.top) + destination, 0.05) + "px";
+      //page.pageDiv.style.left = lerp(parseFloat(page.pageDiv.style.left), parseFloat(page.pageDiv.style.left) + destination, 0.05) + "px";
+      page.pageDiv.style.left = parseFloat(page.pageDiv.style.left) + destination + "px";
+      if(Math.abs(parseFloat(page.pageDiv.style.left) - (parseFloat(page.pageDiv.style.left) + destination)) > 100) {
+        destination = 0;
       }
-      console.log(Math.abs(parseFloat(page.pageDiv.style.top) - (parseFloat(page.pageDiv.style.top) + destination)))
     } */
-   /*  newScroll = lerp(newScroll, window.scrollY + destination, 0.1);
-    //console.log(newScroll)
-    window.scrollTo(0, newScroll) */
-    for(page of pages) {
-      parseFloat(page.pageDiv.style.left)
-    }
   }
 
-  function playAnimation(distance) {
+  function playAnimation(distance, time) {
+    animating = true;
+    console.log("animating")
     for(page of pages) {
       const keyframes = [
-        /* {transform: "translateY(" + parseFloat(pageDiv.style.top) + "px)"},
-        {transform: "translateY(" +parseFloat(pageDiv.style.top) + distance + "px)"} */
         {transform: "translateX(0px)"},
         {transform: "translateX(" + distance + "px)"}
       ];
-      page.pageDiv.animate(keyframes, {
+      let anim = page.pageDiv.animate(keyframes, {
         iterations: 1,
-        duration: 1000,
-        easing: 'ease-in-out',
-        fill: 'forwards'
+        duration: time,
+        easing: 'ease-out',
+        fill: 'both'
       }) 
+      page.pageDiv.style.left = (parseFloat(page.pageDiv.style.left) + distance) + "px";
+      anim.onfinish = () => {
+        animating = false;
+      }
     }
        
   }
