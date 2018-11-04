@@ -6,12 +6,13 @@ let currentPage = 0;
 let oldScroll = 0;
 let newScroll = 0;
 let destination = 0;
+let currentLocation = 0;
 let animating = false;
 let center = {x: 0, y: 0};
 let swipeDistance = 0;
 let lerpVal = 0;
 let numberOfFingers = 0;
-let months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+let months = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 let years = ["2016", "2017", "2018"]
 let iterator = 0;
 
@@ -109,27 +110,50 @@ function random_rgba() {
       let pg = g.groupings[0];
       if(pointers.numOfPointers === 1) {
         if(pg.horizontalSpeed > 10 && !animating) {
-          destination = 50;
-          playAnimation(destination, 16);
+          //destination = 50;
+          //playAnimation(destination, 16);
         }
         else if( pg.horizontalSpeed < - 10 && !animating) {
-          destination = - 50;
-          playAnimation(destination, 16);
+          //destination = - 50;
+          //playAnimation(destination, 16);
         }
       }
       if(pointers.numOfPointers  === 2) { 
         if(pg.horizontalSpeed > 50 && !animating) {
-          destination = pageSize;
-          playAnimation(destination, 300);
+          //destination = pageSize;
+         // playAnimation(destination, 300);
           center = {x: center.x + 500, y: 0};
+          currentScroll += 0.05;
+          currentPage = pages[parseInt(currentScroll)];
         }
         else if(pg.horizontalSpeed < - 50 && !animating) {
-          destination = -pageSize;
-          playAnimation(destination, 300);
+          //destination = -pageSize;
+          currentScroll -= 0.05;
+          currentPage = pages[parseInt(currentScroll)];
+         // playAnimation(destination, 300);
           center = {x: center.x - 500, y: 0};
         }
       }
+      if(pointers.numOfPointers === 3) {
+        if(pg.horizontalSpeed > 50 && !animating) {
+          //destination = pageSize;
+         // playAnimation(destination, 300);
+          currentScroll += 0.05;
+          currentPage = months[parseInt(currentScroll)];
+        }
+        else if(pg.horizontalSpeed < - 50 && !animating) {
+          //destination = -pageSize;
+          currentScroll -= 0.05;
+          currentPage = months[parseInt(currentScroll)];
+         // playAnimation(destination, 300);
+        }
+      }
     } 
+    
+    console.log(destination)
+   destination = lerp(destination, parseFloat(currentPage.pageDiv.style.left), 0.05);
+    console.log(currentPage)
+    window.scrollTo(destination, 0);
     /*  for(page of pages) {
       if(Math.abs(parseFloat(page.pageDiv.style.left) - (parseFloat(page.pageDiv.style.left) + center.x)) > 10) {
         animating = true;
